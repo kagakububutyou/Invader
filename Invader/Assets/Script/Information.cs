@@ -16,7 +16,7 @@ public class Information : MonoBehaviour {
     /// </summary>
     void Update()
     {
-        ScreenSize();
+        //ScreenSize();
     }
 
     /// <summary>

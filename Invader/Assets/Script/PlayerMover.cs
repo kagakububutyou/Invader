@@ -4,53 +4,72 @@ using System.Collections;
 public class PlayerMover : MonoBehaviour {
 
     [SerializeField]
-    private float Speed = 0.0f;
-    [SerializeField]
-    private float hoge = 0.0f;
-
+    private float Speed = 0.0f;     /// スピード
+    private int Right = 1;
+    private int Left = -1;
 
     /// <summary>
     /// 初期化のためにこれを使用してください
     /// </summary>
     void Start()
     {
-        Scale();
-        StartPosition();
+     
     }
     /// <summary>
     /// 更新は、フレームごとに一度と呼ばれている
     /// </summary>
     void Update()
     {
-        Scale();
         Move();
-        print(transform.position);
-    }
-
-    /// <summary>
-    /// 開始時の座標
-    /// </summary>
-    void StartPosition()
-    {
-        transform.position = new Vector3(-Screen.width / 100.0f - transform.lossyScale.x * hoge, 0.0f, 0.0f);
     }
     /// <summary>
     /// 左右移動
     /// </summary>
     void Move()
     {
-        //var value = Input.GetAxis("Horizontal");
-        //transform.Translate(Vector3.right * value * Speed * Time.deltaTime);
+        var value = Input.GetAxisRaw("Horizontal");
+        var velocity = value * Speed * Time.deltaTime;
+        var screenPlayer = Camera.main.WorldToScreenPoint(transform.position);
+        var scalePlayer = Camera.main.WorldToScreenPoint(transform.lossyScale);
 
-        Vector3 temp;
-        float moveX = Input.GetAxis("Horizontal") * Time.deltaTime * Speed;
-        transform.Translate(new Vector3(moveX, 0, 0));
-        temp = transform.position;
-        temp.x = Mathf.Clamp(temp.x, -Screen.width / 100.0f - transform.lossyScale.x * hoge, Screen.width / 100.0f + transform.lossyScale.x * hoge);
-        transform.position = temp;
+        //print(screenPlayer - scalePlayer / 20);
+        print(scalePlayer.x/20);
+
+        transform.Translate(new Vector3(velocity, 0, 0));
+        /// 右
+        if (screenPlayer.x <= 0)
+        {
+            var screenPos = Camera.main.ScreenToWorldPoint(new Vector3(0,0,0));
+            transform.position = new Vector3((int)screenPos.x, 0, 0);
+            if (value == Right)
+            {
+                transform.Translate(new Vector3(velocity, 0, 0));
+            }
+        }
+        
+        /// 左
+        if (screenPlayer.x >= Screen.width)
+        {
+            var screenPos = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0));
+            transform.position = new Vector3((int)screenPos.x, 0, 0);
+            if (value == Left)
+            {
+                transform.Translate(new Vector3(velocity, 0, 0));
+            }
+        }
+        
+
+
     }
-    void Scale()
+    /// <summary>
+    /// 数値確認用
+    /// </summary>
+    void OnGUI()
     {
-        transform.localScale = new Vector3(Screen.width / 1000.0f, Screen.height / 1000.0f , 1);
+        GUI.Label(new Rect(10,10,100,100),transform.localScale.ToString());
+        GUI.Label(new Rect(10, 40, 100, 100), transform.lossyScale.ToString());
+        GUI.Label(new Rect(10, 60, 100, 100), transform.position.ToString());
+        GUI.Label(new Rect(10, 80, 100, 100), Screen.width.ToString());
+        GUI.Label(new Rect(10, 100, 100, 100), Screen.height.ToString());
     }
 }

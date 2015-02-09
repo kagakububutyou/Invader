@@ -56,6 +56,8 @@
   <ItemGroup>
     <Compile Include="Assets\Script\Information.cs" />
     <Compile Include="Assets\Script\PlayerMover.cs" />
+    <Compile Include="Assets\Script\Scale.cs" />
+    <Compile Include="Assets\Script\StartPosition.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>
