@@ -5,8 +5,12 @@ public class PlayerMover : MonoBehaviour {
 
     [SerializeField]
     private float Speed = 0.0f;     /// スピード
+   
     private int Right = 1;
     private int Left = -1;
+
+    private float value = 0.0f;
+    private float velocity = 0.0f;
 
     /// <summary>
     /// 初期化のためにこれを使用してください
@@ -27,49 +31,36 @@ public class PlayerMover : MonoBehaviour {
     /// </summary>
     void Move()
     {
-        var value = Input.GetAxisRaw("Horizontal");
-        var velocity = value * Speed * Time.deltaTime;
-        var screenPlayer = Camera.main.WorldToScreenPoint(transform.position);
-        var scalePlayer = Camera.main.WorldToScreenPoint(transform.lossyScale);
-
-        //print(screenPlayer - scalePlayer / 20);
-        print(scalePlayer.x/20);
+        value = Input.GetAxisRaw("Horizontal");
+        velocity = value * Speed * Time.deltaTime;
+        var scrennPos = Camera.main.WorldToScreenPoint(transform.position);
 
         transform.Translate(new Vector3(velocity, 0, 0));
         /// 右
-        if (screenPlayer.x <= 0)
+        if (scrennPos.x <= 0)
         {
-            var screenPos = Camera.main.ScreenToWorldPoint(new Vector3(0,0,0));
-            transform.position = new Vector3((int)screenPos.x, 0, 0);
-            if (value == Right)
-            {
-                transform.Translate(new Vector3(velocity, 0, 0));
-            }
+            PushBack(scrennPos,Right);
         }
-        
+
         /// 左
-        if (screenPlayer.x >= Screen.width)
+        if (scrennPos.x >= Screen.width)
         {
-            var screenPos = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0));
-            transform.position = new Vector3((int)screenPos.x, 0, 0);
-            if (value == Left)
-            {
-                transform.Translate(new Vector3(velocity, 0, 0));
-            }
+            PushBack(scrennPos,Left);
         }
-        
-
-
     }
     /// <summary>
-    /// 数値確認用
+    /// 壁にあたったら戻す
     /// </summary>
-    void OnGUI()
+    /// <param name="pos">座標</param>
+    /// <param name="direction">方向</param>
+    void PushBack(Vector3 pos,float direction)
     {
-        GUI.Label(new Rect(10,10,100,100),transform.localScale.ToString());
-        GUI.Label(new Rect(10, 40, 100, 100), transform.lossyScale.ToString());
-        GUI.Label(new Rect(10, 60, 100, 100), transform.position.ToString());
-        GUI.Label(new Rect(10, 80, 100, 100), Screen.width.ToString());
-        GUI.Label(new Rect(10, 100, 100, 100), Screen.height.ToString());
+        /// 関数化する
+        var worldPos = Camera.main.ScreenToWorldPoint(new Vector3(pos.x, 0, 0));
+        transform.position = new Vector3(worldPos.x, transform.position.y, 0);
+        if (value == direction)
+        {
+            transform.Translate(new Vector3(velocity, 0, 0));
+        }
     }
 }
