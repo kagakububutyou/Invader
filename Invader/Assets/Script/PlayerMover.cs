@@ -5,9 +5,9 @@ public class PlayerMover : MonoBehaviour {
 
     [SerializeField]
     private float Speed = 0.0f;     /// スピード
-   
-    private int Right = 1;
-    private int Left = -1;
+
+    private float Right = 1.0f;     /// 右
+    private float Left = -1.0f;     /// 左
 
     private float value = 0.0f;
     private float velocity = 0.0f;
