@@ -16,7 +16,7 @@ public class Information : MonoBehaviour {
     /// </summary>
     void Update()
     {
-        //ScreenSize();
+        ScreenSize();
     }
 
     /// <summary>
@@ -25,7 +25,6 @@ public class Information : MonoBehaviour {
     /// </summary>
     void ScreenSize()
     {
-        print(Screen.width + ", " + Screen.height);
-        //print(Screen.currentResolution.width + "x" + Screen.currentResolution.height);
+        Debug.Log(Screen.width + ", " + Screen.height);
     }
 }

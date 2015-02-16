@@ -18,6 +18,5 @@ public class StartPosition : MonoBehaviour {
         pos = Camera.main.ScreenToWorldPoint((new Vector3(transform.lossyScale.x * width, transform.lossyScale.y * height, 0.0f)));
 
         transform.position = new Vector3(pos.x, pos.y, 0.0f);
-        Debug.Log(transform.position);
 	}
 }

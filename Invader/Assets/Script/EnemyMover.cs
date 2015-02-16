@@ -5,6 +5,8 @@ public class EnemyMover : MonoBehaviour {
 
     [SerializeField]
     private float Speed = 0.0f;     /// スピード
+    [SerializeField]
+    private float Range = 0.0f;     /// 範囲上限   
 
     private float Right = 1.0f;     /// 右
     private float Left = -1.0f;     /// 左
@@ -26,6 +28,7 @@ public class EnemyMover : MonoBehaviour {
 	void Update () 
     {
         Move();
+        RangeControl();
 	}
 
     /// <summary>
@@ -36,16 +39,33 @@ public class EnemyMover : MonoBehaviour {
         velocity = value * Speed * Time.deltaTime;
 
         transform.Translate(new Vector3(velocity, 0, 0));
+        
+    }
+    /// <summary>
+    /// 移動範囲
+    /// </summary>
+    void RangeControl()
+    {
         var scrennPos = Camera.main.WorldToScreenPoint(transform.position);
+        var scrennScale = Camera.main.ScreenToWorldPoint(transform.lossyScale);
 
+        Direction(scrennPos, scrennScale);
+    }
+    /// <summary>
+    /// 壁にあたったら方向を変える
+    /// </summary>
+    /// <param name="pos">座標</param>
+    /// <param name="scale">大きさ</param>
+    void Direction(Vector3 pos, Vector3 scale)
+    {
         /// 右
-        if (scrennPos.x <= 0)
+        if (pos.x <= -scale.x * Screen.width / Range)
         {
             value = Right;
         }
 
-         /// 左
-        if (scrennPos.x >= Screen.width)
+        /// 左
+        if (pos.x >= Screen.width + scale.x * Screen.width / Range)
         {
             value = Left;
         }
